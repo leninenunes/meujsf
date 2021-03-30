@@ -8,12 +8,12 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="title">
-        <h:outputText value="#{bundle.ListUsuarioTitle}"></h:outputText>
+        <h:outputText value="#{bundle.AppTitle} - #{bundle.ListUsuarioTitle}"></h:outputText>
     </ui:define>
     <ui:define name="content">
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-2">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-2 border-bottom">
-              <div class="col-sm-8"><h2>Usuários</h2></div>
+              <div class="col-sm-8"><h2>#{bundle.ListUsuarioTitle}</h2></div>
             </div>
             <h:form id="formList">
                 <h:panelGroup id="messagePanel" layout="list" rendered="#{facesContext.validationFailed==false}" >
@@ -28,7 +28,7 @@
                         <f:passThroughAttribute name="data-target" value="#modalCreate"/>
                     </h:commandLink>
                 </div>
-                <a class="btn btn-primary" data-toggle="collapse" href="#filter" role="button" aria-expanded="false">Filtro</a>
+                <a class="btn btn-primary" data-toggle="collapse" href="#filter" role="button" aria-expanded="false">#{bundle.Filter}</a>
                 <div id="filter" class="row collapse #{usuarioController.filterShow}">
                     <div class="form-group col-md-3">
                         <h:outputLabel value="#{bundle.CreateUsuarioTitle_id}" for="id" />
@@ -39,10 +39,10 @@
                         <h:inputText class="form-control" id="nome" value="#{usuarioController.filtered.nome}" title="#{bundle.CreateUsuarioTitle_nome}" />
                     </div>
                     <div class="form-group col-md-3" style="margin-top: auto;">
-                        <h:commandButton class="btn btn-primary" value="Buscar">
+                        <h:commandButton class="btn btn-primary" value="#{bundle.Search}">
                             <f:ajax event="click" render="formList" listener="#{usuarioController.filter}" execute="@form" />
                         </h:commandButton>
-                        <h:commandButton class="btn btn-default" value="Limpar">
+                        <h:commandButton class="btn btn-default" value="#{bundle.Clean}">
                             <f:ajax event="click" render="formList" listener="#{usuarioController.clearFilter}" execute="@form" />
                         </h:commandButton>
                     </div>
@@ -87,56 +87,60 @@
                                     </h:commandLink>
                                 </h:column>
                         </h:dataTable>
+                    
+                        <div class="col-md-12">
+                            <h:outputLabel value="#{bundle.RowsPerPage} " />
+                            <h:selectOneMenu id="inputPageSize" value="#{usuarioController.pageSize}">
+                                <f:ajax event="change" render="formList" listener="#{usuarioController.updatePageSize}" />
+                                <f:selectItems value="#{usuarioController.listPageSize}" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="col-md-6">
+                            #{bundle.Page} <h:outputText value="#{usuarioController.pagination.page + 1} "/> #{bundle.PageOf} 
+                            <h:outputText value="#{usuarioController.pagination.totalPage + 1} "/> #{bundle.ShowingRecords} 
+                            <h:outputText value="#{usuarioController.pagination.pageFirstItem + 1} #{bundle.RecordsUpTo} 
+                            #{usuarioController.pagination.pageLastItem + 1} #{bundle.RecordsOf} #{usuarioController.pagination.itemsCount}"/>
+                        </div>
+                        <div class="col-md-12">
+                            <ul class="pagination justify-content-center">
+                               <li class="page-item">
+                                   <h:commandLink class="page-link" action="#{usuarioController.first}" value="#{bundle.First}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.first}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                               <li class="page-item #{(usuarioController.pagination.hasPreviousPage == false) ? 'disabled':''}">
+                                   <h:commandLink class="page-link" value="#{bundle.Previous}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.previous}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                               <li class="page-item #{(usuarioController.pagination.page + 1 == usuarioController.pagination.page + 1) ? 'active' : ''}">
+                                   <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 1}" rendered="#{usuarioController.pagination.hasPrimaryPage}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.priPage}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                               <li class="page-item #{(usuarioController.pagination.page + 2 == usuarioController.pagination.page + 1) ? 'active' : ''}">
+                                   <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 2}" rendered="#{usuarioController.pagination.hasSecondPage}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.secPage}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                               <li class="page-item #{(usuarioController.pagination.page + 3 == usuarioController.pagination.page + 1) ? 'active' : ''}">
+                                   <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 3}" rendered="#{usuarioController.pagination.hasThirdPage}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.thiPage}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                               <li class="page-item #{(usuarioController.pagination.hasNextPage == false) ? 'disabled':''}">
+                                   <h:commandLink class="page-link" value="#{bundle.Next}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.next}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                               <li class="page-item">
+                                   <h:commandLink class="page-link" action="#{usuarioController.last}" value="#{bundle.Last}">
+                                       <f:ajax event="click" render="formList" listener="#{usuarioController.last}" execute="@form" />
+                                   </h:commandLink>
+                               </li>
+                           </ul>
+                       </div>
                     </h:panelGroup>
-                    <div class="col-md-12">
-                        <h:outputLabel value="Linhas por Página: " />
-                        <h:selectOneMenu id="inputPageSize" value="#{usuarioController.pageSize}">
-                            <f:ajax event="change" render="formList" listener="#{usuarioController.updatePageSize}" />
-                            <f:selectItems value="#{usuarioController.listPageSize}" />
-                        </h:selectOneMenu>
-                    </div>
-                    <div class="col-md-6">
-                        Página <h:outputText value="#{usuarioController.pagination.page + 1} "/> de <h:outputText value="#{usuarioController.pagination.totalPage + 1} "/> - Mostrando registros de <h:outputText value="#{usuarioController.pagination.pageFirstItem + 1} a #{usuarioController.pagination.pageLastItem + 1} de #{usuarioController.pagination.itemsCount}"/>
-                    </div>
-                    <div class="col-md-12">
-                        <ul class="pagination justify-content-center">
-                           <li class="page-item">
-                               <h:commandLink class="page-link" action="#{usuarioController.first}" value="Primeira">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.first}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                           <li class="page-item #{(usuarioController.pagination.hasPreviousPage == false) ? 'disabled':''}">
-                               <h:commandLink class="page-link" value="#{bundle.Previous}">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.previous}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                           <li class="page-item #{(usuarioController.pagination.page + 1 == usuarioController.pagination.page + 1) ? 'active' : ''}">
-                               <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 1}" rendered="#{usuarioController.pagination.hasPrimaryPage}">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.priPage}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                           <li class="page-item #{(usuarioController.pagination.page + 2 == usuarioController.pagination.page + 1) ? 'active' : ''}">
-                               <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 2}" rendered="#{usuarioController.pagination.hasSecondPage}">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.secPage}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                           <li class="page-item #{(usuarioController.pagination.page + 3 == usuarioController.pagination.page + 1) ? 'active' : ''}">
-                               <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 3}" rendered="#{usuarioController.pagination.hasThirdPage}">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.thiPage}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                           <li class="page-item #{(usuarioController.pagination.hasNextPage == false) ? 'disabled':''}">
-                               <h:commandLink class="page-link" value="#{bundle.Next}">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.next}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                           <li class="page-item">
-                               <h:commandLink class="page-link" action="#{usuarioController.last}" value="Última">
-                                   <f:ajax event="click" render="formList" listener="#{usuarioController.last}" execute="@form" />
-                               </h:commandLink>
-                           </li>
-                       </ul>
-                   </div>
                 </div>
             </h:form>
         </main>
@@ -145,7 +149,7 @@
                 <div class="modal-content">
                     <h:form id="formCreate">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="modalLabel">Adicionar Item</h4>
+                            <h4 class="modal-title" id="modalLabel">#{bundle.CreateUsuarioTitle}</h4>
                         </div>
                         <div class="modal-body">
                             <ui:include src="Create.xhtml" />
@@ -165,7 +169,7 @@
                 <div class="modal-content">
                     <h:form id="formEdit">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="modalLabel">Editar Item <h:outputText value="#{usuarioController.selected.id}" title="#{bundle.EditUsuarioTitle_id}" /></h4>
+                            <h4 class="modal-title" id="modalLabel">#{bundle.EditUsuarioTitle} <h:outputText value="#{usuarioController.selected.id}" title="#{bundle.EditUsuarioTitle_id}" /></h4>
                         </div>
                         <div class="modal-body">
                             <ui:include src="Edit.xhtml" />
@@ -185,10 +189,10 @@
                 <div class="modal-content">
                     <h:form id="formDelete">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="modalLabel">Excluir Item <h:outputText value="#{usuarioController.selected.id}" /></h4>
+                            <h4 class="modal-title" id="modalLabel">#{bundle.DeleteUsuarioTitle} <h:outputText value="#{usuarioController.selected.id}" /></h4>
                         </div>
                         <div class="modal-body">
-                            Deseja realmente excluir o item <h:outputText value="#{usuarioController.selected.id}" title="#{bundle.ListUsuarioTitle_id}" />?
+                            #{bundle.DeleteUsuarioTitleQuestion} <h:outputText value="#{usuarioController.selected.id}" title="#{bundle.ListUsuarioTitle_id}" />?
                         </div>
                         <div class="modal-footer">
                             <h:commandLink class="btn btn-primary" value="#{bundle.Yes}">
@@ -205,7 +209,7 @@
                 <div class="modal-content">
                     <h:form id="formView">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="modalLabel">Visualizar Item <h:outputText value="#{usuarioController.selected.id}" title="#{bundle.ViewUsuarioTitle_id}"/></h4>
+                            <h4 class="modal-title" id="modalLabel">#{bundle.ViewUsuarioTitle} <h:outputText value="#{usuarioController.selected.id}" title="#{bundle.ViewUsuarioTitle_id}"/></h4>
                         </div>
                         <div class="modal-body">
                             <ui:include src="View.xhtml" />

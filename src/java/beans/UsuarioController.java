@@ -165,7 +165,6 @@ public class UsuarioController implements Serializable {
     public void prepareDestroy() {
         current = (Usuario) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-//        return "";
     }
 
     public void update() {
