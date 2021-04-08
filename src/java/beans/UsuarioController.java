@@ -29,7 +29,7 @@ public class UsuarioController implements Serializable {
     private UsuarioJpaController jpaController = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
-    private Integer pageSize = 5;
+    private Integer pageSize = 10;
     private Usuario filtered;
     private String filterShow;
 
