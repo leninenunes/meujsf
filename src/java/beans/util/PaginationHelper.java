@@ -94,5 +94,39 @@ public abstract class PaginationHelper {
     public int getPageSize() {
         return pageSize;
     }
-
+    
+    public String getDisabledPreviousPage(){
+        if (isHasPreviousPage()){
+            return "";
+        }
+        return "disabled";
+    }
+    
+    public String getDisabledNextPage(){
+        if (isHasNextPage()){
+            return "";
+        }
+        return "disabled";
+    }
+    
+    public String getActivePrimaryPage(){
+        if (page + 1 == page + 1){
+            return "active";
+        }
+        return "";
+    }
+    
+    public String getActiveSecondPage(){
+        if (page + 1 == page + 2){
+            return "active";
+        }
+        return "";
+    }
+    
+    public String getActiveThirdPage(){
+        if (page + 1 == page + 3){
+            return "active";
+        }
+        return "";
+    }
 }

@@ -33,9 +33,14 @@
                               <h:commandLink class="dropdown-item" action="#{navigationController.subcontrato}" value="Subcontratos" />
                               <h:commandLink class="dropdown-item" action="#{navigationController.profissional}" value="Profissional" />
                               <h:commandLink class="dropdown-item" action="#{navigationController.usuario}" value="Usuários" />
+                              <h:commandLink class="dropdown-item" action="#{navigationController.cliente}" value="Clientes" />
                           </div>
                       </li>
                   </ul>
+                </div>
+                <div class="float-right">
+                    <h:commandLink class="#{localeMB.classEn}" value="English" action="#{localeMB.englishLocale}" style="padding-right: 12px;" />
+                    <h:commandLink class="#{localeMB.classPt}" value="Português" action="#{localeMB.portugueseLocale}" />
                 </div>
             </nav>
         </h:form>

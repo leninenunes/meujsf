@@ -21,8 +21,7 @@
                     <script>validationSucess();</script>
                 </h:panelGroup>
                 <div class="float-right">
-                    <h:commandLink 
-                        class="btn btn-primary" value="#{bundle.ListUsuarioCreateLink}">
+                    <h:commandLink class="btn btn-primary" value="#{bundle.ListUsuarioCreateLink}">
                         <f:ajax render="formCreate" event="click" listener="#{usuarioController.prepareCreate}" />
                         <f:passThroughAttribute name="data-toggle" value="modal"/>
                         <f:passThroughAttribute name="data-target" value="#modalCreate"/>
@@ -108,27 +107,27 @@
                                        <f:ajax event="click" render="formList" listener="#{usuarioController.first}" execute="@form" />
                                    </h:commandLink>
                                </li>
-                               <li class="page-item #{(usuarioController.pagination.hasPreviousPage == false) ? 'disabled':''}">
+                               <li class="page-item #{usuarioController.pagination.disabledPreviousPage}">
                                    <h:commandLink class="page-link" value="#{bundle.Previous}">
                                        <f:ajax event="click" render="formList" listener="#{usuarioController.previous}" execute="@form" />
                                    </h:commandLink>
                                </li>
-                               <li class="page-item #{(usuarioController.pagination.page + 1 == usuarioController.pagination.page + 1) ? 'active' : ''}">
+                                <li class="page-item #{usuarioController.pagination.activePrimaryPage}">
                                    <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 1}" rendered="#{usuarioController.pagination.hasPrimaryPage}">
                                        <f:ajax event="click" render="formList" listener="#{usuarioController.priPage}" execute="@form" />
                                    </h:commandLink>
                                </li>
-                               <li class="page-item #{(usuarioController.pagination.page + 2 == usuarioController.pagination.page + 1) ? 'active' : ''}">
+                                <li class="page-item #{usuarioController.pagination.activeSecondPage}">
                                    <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 2}" rendered="#{usuarioController.pagination.hasSecondPage}">
                                        <f:ajax event="click" render="formList" listener="#{usuarioController.secPage}" execute="@form" />
                                    </h:commandLink>
                                </li>
-                               <li class="page-item #{(usuarioController.pagination.page + 3 == usuarioController.pagination.page + 1) ? 'active' : ''}">
+                                <li class="page-item #{usuarioController.pagination.activeThirdPage}">
                                    <h:commandLink class="page-link" value="#{usuarioController.pagination.page + 3}" rendered="#{usuarioController.pagination.hasThirdPage}">
                                        <f:ajax event="click" render="formList" listener="#{usuarioController.thiPage}" execute="@form" />
                                    </h:commandLink>
                                </li>
-                               <li class="page-item #{(usuarioController.pagination.hasNextPage == false) ? 'disabled':''}">
+                                <li class="page-item #{usuarioController.pagination.disabledNextPage}">
                                    <h:commandLink class="page-link" value="#{bundle.Next}">
                                        <f:ajax event="click" render="formList" listener="#{usuarioController.next}" execute="@form" />
                                    </h:commandLink>

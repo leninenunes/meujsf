@@ -1,9 +1,9 @@
 package beans;
 
-import model.Usuario;
+import model.Cliente;
 import beans.util.JsfUtil;
 import beans.util.PaginationHelper;
-import facade.UsuarioJpaController;
+import facade.ClienteJpaController;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,60 +20,60 @@ import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.persistence.Persistence;
 
-@ManagedBean(name = "usuarioController")
+@ManagedBean(name = "clienteController")
 @SessionScoped
-public class UsuarioController implements Serializable {
+public class ClienteController implements Serializable {
 
-    private Usuario current;
+    private Cliente current;
     private DataModel items = null;
-    private UsuarioJpaController jpaController = null;
+    private ClienteJpaController jpaController = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
     private Integer pageSize = 10;
-    private Usuario filtered;
+    private Cliente filtered;
     private String filterShow;
 
-    public UsuarioController() {
+    public ClienteController() {
     }
 
-    public Usuario getSelected() {
+    public Cliente getSelected() {
         if (current == null) {
-            current = new Usuario();
+            current = new Cliente();
             selectedItemIndex = -1;
         }
         return current;
     }
-    
-    public Usuario getFiltered() {
+
+    public Cliente getFiltered() {
         if (filtered == null) {
-            filtered = new Usuario();
+            filtered = new Cliente();
             selectedItemIndex = -1;
         }
         return filtered;
     }
-    
-    public Integer getPageSize(){
+
+    public Integer getPageSize() {
         return pageSize;
     }
-    
-    public void setPageSize(Integer pageSize){
+
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-    
-    public String getFilterShow(){
+
+    public String getFilterShow() {
         return filterShow;
     }
-    
-    public void setFilterShow(String filterShow){
+
+    public void setFilterShow(String filterShow) {
         this.filterShow = filterShow;
     }
-    
-    public void updatePageSize(){
+
+    public void updatePageSize() {
         recreatePagination();
         items = getPagination().createPageDataModel();
     }
-    
-    public List<Integer> getListPageSize(){
+
+    public List<Integer> getListPageSize() {
         ArrayList<Integer> lista = new ArrayList();
         lista.add(5);
         lista.add(10);
@@ -83,9 +83,9 @@ public class UsuarioController implements Serializable {
         return lista;
     }
 
-    private UsuarioJpaController getJpaController() {
+    private ClienteJpaController getJpaController() {
         if (jpaController == null) {
-            jpaController = new UsuarioJpaController(Persistence.createEntityManagerFactory("MeuJSF6PU"));
+            jpaController = new ClienteJpaController(Persistence.createEntityManagerFactory("MeuJSF6PU"));
         }
         return jpaController;
     }
@@ -96,15 +96,15 @@ public class UsuarioController implements Serializable {
 
                 @Override
                 public int getItemsCount() {
-                    return getJpaController().getUsuarioCount(filtered);
+                    return getJpaController().getClienteCount(filtered);
                 }
 
                 @Override
                 public DataModel createPageDataModel() {
-                    if(current == null){
-                        return new ListDataModel(getJpaController().findUsuarioEntities(getPageSize(), getPageFirstItem()));
+                    if (current == null) {
+                        return new ListDataModel(getJpaController().findClienteEntities(getPageSize(), getPageFirstItem()));
                     }
-                    return new ListDataModel(getJpaController().findUsuarioFilter(filtered, getPageSize(), getPageFirstItem()));
+                    return new ListDataModel(getJpaController().findClienteFilter(filtered, getPageSize(), getPageFirstItem()));
                 }
             };
         }
@@ -113,79 +113,70 @@ public class UsuarioController implements Serializable {
 
     public String prepareList() {
         recreateModel();
-//        return "List?faces-redirect=true";
         return "List";
     }
-    
+
     public void prepareView() {
-        current = (Usuario) getItems().getRowData();
+        current = (Cliente) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-//        return "View?faces-redirect=true";
     }
 
     public void prepareCreate() {
-        current = new Usuario();
+        current = new Cliente();
         selectedItemIndex = -1;
-//        return "Create";
     }
 
     public void create() {
         try {
             getJpaController().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle3").getString("ClienteCreated"));
             clearFilter();
             recreateModel();
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle3").getString("PersistenceErrorOccured"));
             recreateModel();
         }
     }
-    
-    public boolean getHasCreate(){
+
+    public boolean getHasCreate() {
         return current == null;
     }
 
     public void prepareEdit() {
-        current = (Usuario) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-//        return "Edit";
-    }
-    
-    public void filter(){
-        items = getPagination().createPageDataModel();
-        filterShow = "show";
-    }
-    
-    public void clearFilter(){
-        items = null;
-        filtered = null;
-        filterShow = "";
-        getPagination().firstPage();
-    }
-    
-    public void prepareDestroy() {
-        current = (Usuario) getItems().getRowData();
+        current = (Cliente) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
     }
 
     public void update() {
         try {
             getJpaController().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioUpdated"));
-//            recreateModel();
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle3").getString("ClienteUpdated"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-//            recreateModel();
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle3").getString("PersistenceErrorOccured"));
         }
     }
 
+    public void filter() {
+        items = getPagination().createPageDataModel();
+        filterShow = "show";
+    }
+
+    public void clearFilter() {
+        items = null;
+        filtered = null;
+        filterShow = "";
+        getPagination().firstPage();
+    }
+
+    public void prepareDestroy() {
+        current = (Cliente) getItems().getRowData();
+        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+    }
+
     public void destroy() {
-//        current = (Usuario) getItems().getRowData();
-//        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         performDestroy();
         recreatePagination();
         recreateModel();
-//        return "List?faces-redirect=true";
     }
 
     public String destroyAndView() {
@@ -204,14 +195,14 @@ public class UsuarioController implements Serializable {
     private void performDestroy() {
         try {
             getJpaController().destroy(current.getId());
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle3").getString("ClienteDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle3").getString("PersistenceErrorOccured"));
         }
     }
 
     private void updateCurrentItem() {
-        int count = getJpaController().getUsuarioCount(filtered);
+        int count = getJpaController().getClienteCount(filtered);
         if (selectedItemIndex >= count) {
             // selected index cannot be bigger than number of items:
             selectedItemIndex = count - 1;
@@ -221,7 +212,7 @@ public class UsuarioController implements Serializable {
             }
         }
         if (selectedItemIndex >= 0) {
-            current = getJpaController().findUsuarioEntities(1, selectedItemIndex).get(0);
+            current = getJpaController().findClienteEntities(1, selectedItemIndex).get(0);
         }
     }
 
@@ -250,51 +241,51 @@ public class UsuarioController implements Serializable {
         getPagination().previousPage();
         items = null;
     }
-    
+
     public void first() {
         getPagination().firstPage();
         items = null;
     }
-    
-    public void last(){
+
+    public void last() {
         getPagination().lastPage();
         items = null;
     }
-    
-    public void priPage(){
+
+    public void priPage() {
         getPagination().primaryPage();
         items = null;
     }
-    
-    public void secPage(){
+
+    public void secPage() {
         getPagination().secondPage();
         items = null;
     }
-    
-    public void thiPage(){
+
+    public void thiPage() {
         getPagination().thirdPage();
         items = null;
     }
-    
+
     public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(getJpaController().findUsuarioEntities(), false);
+        return JsfUtil.getSelectItems(getJpaController().findClienteEntities(), false);
     }
 
     public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(getJpaController().findUsuarioEntities(), true);
+        return JsfUtil.getSelectItems(getJpaController().findClienteEntities(), true);
     }
 
-    @FacesConverter(forClass = Usuario.class)
-    public static class UsuarioControllerConverter implements Converter {
+    @FacesConverter(forClass = Cliente.class)
+    public static class ClienteControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            UsuarioController controller = (UsuarioController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "usuarioController");
-            return controller.getJpaController().findUsuario(getKey(value));
+            ClienteController controller = (ClienteController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "clienteController");
+            return controller.getJpaController().findCliente(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -314,11 +305,11 @@ public class UsuarioController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Usuario) {
-                Usuario o = (Usuario) object;
+            if (object instanceof Cliente) {
+                Cliente o = (Cliente) object;
                 return getStringKey(o.getId());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Usuario.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Cliente.class.getName());
             }
         }
 

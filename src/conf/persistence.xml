@@ -6,6 +6,7 @@
     <class>model.Usuario</class>
     <class>model.Efetivo</class>
     <class>model.Funcao</class>
+    <class>model.Cliente</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/sisplat?useTimezone=true&amp;serverTimezone=UTC"/>

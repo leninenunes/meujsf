@@ -5,13 +5,16 @@
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     <application>
         <resource-bundle>
-            <base-name>/Bundle</base-name>
+            <base-name>messages.messages</base-name>
             <var>bundle</var>
         </resource-bundle>
-        <resource-bundle>
-            <base-name>/Bundle2</base-name>
-            <var>bundle2</var>
-        </resource-bundle>
+        <locale-config>
+            <default-locale>pt_BR</default-locale>
+            <supported-locale>en_US</supported-locale>
+        </locale-config>
+        <message-bundle>
+            messages.messages
+        </message-bundle>
     </application>
     <application>
         <el-resolver>beans.util.JsfCrudELResolver</el-resolver>
@@ -107,4 +110,51 @@
             <to-view-id>/funcao/Detail.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <managed-bean>
+        <managed-bean-name>cliente</managed-bean-name>
+        <managed-bean-class>beans.ClienteController</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
+    <managed-bean>
+        <managed-bean-name>clienteJpa</managed-bean-name>
+        <managed-bean-class>facade.ClienteJpaController</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
+    <converter>
+        <converter-for-class>model.Cliente</converter-for-class>
+        <converter-class>beans.ClienteConverter</converter-class>
+    </converter>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>cliente_create</from-outcome>
+            <to-view-id>/cliente/New.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>cliente_list</from-outcome>
+            <to-view-id>/cliente/List.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>cliente_edit</from-outcome>
+            <to-view-id>/cliente/Edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>cliente_detail</from-outcome>
+            <to-view-id>/cliente/Detail.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <managed-bean>
+        <managed-bean-name>localeMB</managed-bean-name>
+        <managed-bean-class>beans.LocaleMB</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 </faces-config>
