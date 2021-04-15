@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/templates/MainTemplate.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="title">
+        <h:outputText value="#{bundle.AppTitle} - #{bundle.ListRdcEfetivoTitle}"></h:outputText>
+    </ui:define>
+    <ui:define name="content">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-2">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-2 border-bottom">
+                <div class="col-sm-8"><h2>#{bundle.ListRdcEfetivoTitle}</h2></div>
+            </div>
+            <h:form id="formList">
+                <h:panelGroup id="messagePanel" layout="list" rendered="#{facesContext.validationFailed==false}" >
+                    <h:messages errorClass="alert alert-danger" infoClass="alert alert-success" layout="list" style="list-style-type: none;"/>
+                    <script>validationSucess();</script>
+                </h:panelGroup>
+                <div class="float-right">
+                    <h:commandLink class="btn btn-primary" value="#{bundle.ListRdcEfetivoCreateLink}">
+                        <f:ajax render="formCreate" event="click" listener="#{rdcEfetivoController.prepareCreate}"/>
+                        <f:passThroughAttribute name="data-toggle" value="modal"/>
+                        <f:passThroughAttribute name="data-target" value="#modalCreate"/>
+                    </h:commandLink>
+                </div>
+                <a class="btn btn-primary" data-toggle="collapse" href="#filter" role="button" aria-expanded="false">#{bundle.Filter}</a>
+                <div id="filter" class="row collapse #{rdcEfetivoController.filterShow}">					
+                    <div class="form-group col-md-3">
+                        <h:outputLabel value="#{bundle.CreateRdcEfetivoLabel_id}" for="id" />
+                        <h:inputText class="form-control" id="id" value="#{rdcEfetivoController.filtered.id}" title="#{bundle.CreateRdcEfetivoTitle_id}"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <h:outputLabel value="#{bundle.CreateRdcEfetivoLabel_codigo}" for="codigo" />
+                        <h:inputText class="form-control" id="codigo" value="#{rdcEfetivoController.filtered.codigo}" title="#{bundle.CreateRdcEfetivoTitle_codigo}"/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <h:outputLabel value="#{bundle.CreateRdcEfetivoLabel_dataRdc}" for="dataRdc" />
+                        <h:inputText class="form-control" id="dataRdc" value="#{rdcEfetivoController.filtered.dataRdc}" title="#{bundle.CreateRdcEfetivoTitle_dataRdc}">
+                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group col-md-3" style="margin-top: auto;">
+                        <h:commandButton class="btn btn-primary" value="#{bundle.Search}">
+                            <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.filter}" execute="@form" />
+                        </h:commandButton>
+                        <h:commandButton class="btn btn-default" value="#{bundle.Clean}">
+                            <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.clearFilter}" execute="@form" />
+                        </h:commandButton>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <h:outputText escape="false" value="#{bundle.ListRdcEfetivoEmpty}" rendered="#{rdcEfetivoController.items.rowCount == 0}"/>
+                    <h:panelGroup rendered="#{rdcEfetivoController.items.rowCount > 0}">
+                        <h:dataTable value="#{rdcEfetivoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" class="table table-striped table-hover table-bordered" rules="all" style="border:solid 1px">
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListRdcEfetivoTitle_id}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListRdcEfetivoTitle_codigo}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.codigo}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListRdcEfetivoTitle_dataRdc}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dataRdc}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </h:column>
+                            <h:column>
+                                <h:commandLink 
+                                    class="view" title="#{bundle.ListRdcEfetivoViewLink}">
+                                    <f:ajax event="click" render="formView" listener="#{rdcEfetivoController.prepareView}" />
+                                    <f:passThroughAttribute name="data-toggle" value="modal"/>
+                                    <f:passThroughAttribute name="data-target" value="#modalView"/>
+                                    <i class="fas fa-list"/>
+                                </h:commandLink>
+                                <h:commandLink 
+                                    class="edit" title="#{bundle.ListRdcEfetivoEditLink}">
+                                    <f:ajax event="click" render="formEdit" listener="#{rdcEfetivoController.prepareEdit}" />
+                                    <f:passThroughAttribute name="data-toggle" value="modal"/>
+                                    <f:passThroughAttribute name="data-target" value="#modalEdit"/>
+                                    <i class="far fa-edit"/>
+                                </h:commandLink>
+                                <h:commandLink 
+                                    class="delete" title="#{bundle.ListRdcEfetivoDestroyLink}">
+                                    <f:ajax event="click" render="formDelete" listener="#{rdcEfetivoController.prepareDestroy}" />
+                                    <f:passThroughAttribute name="data-toggle" value="modal"/>
+                                    <f:passThroughAttribute name="data-target" value="#modalDelete"/>
+                                    <i class="far fa-trash-alt"/>
+                                </h:commandLink>
+                            </h:column>
+                        </h:dataTable>
+                        <div class="col-md-12">
+                            <h:outputLabel value="#{bundle.RowsPerPage} " />
+                            <h:selectOneMenu id="inputPageSize" value="#{rdcEfetivoController.pageSize}">
+                                <f:ajax event="change" render="formList" listener="#{rdcEfetivoController.updatePageSize}" />
+                                <f:selectItems value="#{rdcEfetivoController.listPageSize}" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="col-md-6">
+                            #{bundle.Page} <h:outputText value="#{rdcEfetivoController.pagination.page + 1} "/> #{bundle.PageOf}
+                            <h:outputText value="#{rdcEfetivoController.pagination.totalPage + 1} "/> #{bundle.ShowingRecords} 
+                            <h:outputText value="#{rdcEfetivoController.pagination.pageFirstItem + 1} #{bundle.RecordsUpTo} 
+                                          #{rdcEfetivoController.pagination.pageLastItem + 1} #{bundle.RecordsOf} #{rdcEfetivoController.pagination.itemsCount}"/>
+                        </div>
+                        <div class="col-md-12">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <h:commandLink class="page-link" action="#{rdcEfetivoController.first}" value="#{bundle.First}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.first}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="page-item #{rdcEfetivoController.pagination.disabledPreviousPage}">
+                                    <h:commandLink class="page-link" value="#{bundle.Previous}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.previous}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="page-item #{rdcEfetivoController.pagination.activePrimaryPage}">
+                                    <h:commandLink class="page-link" value="#{rdcEfetivoController.pagination.page + 1}" rendered="#{rdcEfetivoController.pagination.hasPrimaryPage}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.priPage}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="page-item #{rdcEfetivoController.pagination.activeSecondPage}">
+                                    <h:commandLink class="page-link" value="#{rdcEfetivoController.pagination.page + 2}" rendered="#{rdcEfetivoController.pagination.hasSecondPage}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.secPage}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="page-item #{rdcEfetivoController.pagination.activeThirdPage}">
+                                    <h:commandLink class="page-link" value="#{rdcEfetivoController.pagination.page + 3}" rendered="#{rdcEfetivoController.pagination.hasThirdPage}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.thiPage}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="page-item #{rdcEfetivoController.pagination.disabledNextPage}">
+                                    <h:commandLink class="page-link" value="#{bundle.Next}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.next}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="page-item">
+                                    <h:commandLink class="page-link" action="#{rdcEfetivoController.last}" value="#{bundle.Last}">
+                                        <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.last}" execute="@form" />
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </h:form>
+        </main>
+        <div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <h:form id="formCreate">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalLabel">#{bundle.CreateRdcEfetivoTitle}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <ui:include src="Create.xhtml" />
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink class="btn btn-primary" value="#{bundle.CreateRdcEfetivoSaveLink}">
+                                <f:ajax event="click" render="formList formCreate" listener="#{rdcEfetivoController.create}" execute="@form" />
+                            </h:commandLink>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><h:outputText value="#{bundle.Cancel}" /></button>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <h:form id="formEdit">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalLabel">#{bundle.EditRdcEfetivoTitle} <h:outputText value="#{rdcEfetivoController.selected.id}" title="#{bundle.EditRdcEfetivoTitle_id}" /></h4>
+                        </div>
+                        <div class="modal-body">
+                            <ui:include src="Edit.xhtml" />
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink class="btn btn-primary" value="#{bundle.EditRdcEfetivoSaveLink}">
+                                <f:ajax event="click" render="formList formEdit" listener="#{rdcEfetivoController.update}" execute="@form" />
+                            </h:commandLink>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><h:outputText value="#{bundle.Cancel}" /></button>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <h:form id="formDelete">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalLabel">#{bundle.DeleteRdcEfetivoTitle} <h:outputText value="#{rdcEfetivoController.selected.id}" /></h4>
+                        </div>
+                        <div class="modal-body">
+                            #{bundle.DeleteRdcEfetivoTitleQuestion} <h:outputText value="#{rdcEfetivoController.selected.id}" title="#{bundle.ListRdcEfetivoTitle_id}" />?
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink class="btn btn-primary" value="#{bundle.Yes}">
+                                <f:ajax event="click" render="formList" listener="#{rdcEfetivoController.destroy}" execute="@form" />
+                            </h:commandLink>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><h:outputText value="#{bundle.Not}" /></button>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalView" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <h:form id="formView">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalLabel">#{bundle.ViewRdcEfetivoTitle} <h:outputText value="#{rdcEfetivoController.selected.id}" title="#{bundle.ViewRdcEfetivoTitle_id}"/></h4>
+                        </div>
+                        <div class="modal-body">
+                            <ui:include src="View.xhtml" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><h:outputText value="#{bundle.Exit}" /></button>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

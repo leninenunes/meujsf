@@ -1,9 +1,9 @@
 package beans;
 
-import model.Cliente;
+import model.RdcEfetivo;
 import beans.util.JsfUtil;
 import beans.util.PaginationHelper;
-import facade.ClienteJpaController;
+import facade.RdcEfetivoJpaController;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,33 +20,33 @@ import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.persistence.Persistence;
 
-@ManagedBean(name = "clienteController")
+@ManagedBean(name = "rdcEfetivoController")
 @SessionScoped
-public class ClienteController implements Serializable {
+public class RdcEfetivoController implements Serializable {
 
-    private Cliente current;
+    private RdcEfetivo current;
     private DataModel items = null;
-    private ClienteJpaController jpaController = null;
+    private RdcEfetivoJpaController jpaController = null;
     private PaginationHelper pagination;
     private int selectedItemIndex;
     private Integer pageSize = 10;
-    private Cliente filtered;
+    private RdcEfetivo filtered;
     private String filterShow;
 
-    public ClienteController() {
+    public RdcEfetivoController() {
     }
 
-    public Cliente getSelected() {
+    public RdcEfetivo getSelected() {
         if (current == null) {
-            current = new Cliente();
+            current = new RdcEfetivo();
             selectedItemIndex = -1;
         }
         return current;
     }
 
-    public Cliente getFiltered() {
+    public RdcEfetivo getFiltered() {
         if (filtered == null) {
-            filtered = new Cliente();
+            filtered = new RdcEfetivo();
             selectedItemIndex = -1;
         }
         return filtered;
@@ -83,9 +83,9 @@ public class ClienteController implements Serializable {
         return lista;
     }
 
-    private ClienteJpaController getJpaController() {
+    private RdcEfetivoJpaController getJpaController() {
         if (jpaController == null) {
-            jpaController = new ClienteJpaController(Persistence.createEntityManagerFactory("MeuJSF6PU"));
+            jpaController = new RdcEfetivoJpaController(Persistence.createEntityManagerFactory("MeuJSF6PU"));
         }
         return jpaController;
     }
@@ -96,15 +96,15 @@ public class ClienteController implements Serializable {
 
                 @Override
                 public int getItemsCount() {
-                    return getJpaController().getClienteCount(filtered);
+                    return getJpaController().getRdcEfetivoCount(filtered);
                 }
 
                 @Override
                 public DataModel createPageDataModel() {
                     if (current == null) {
-                        return new ListDataModel(getJpaController().findClienteEntities(getPageSize(), getPageFirstItem()));
+                        return new ListDataModel(getJpaController().findRdcEfetivoEntities(getPageSize(), getPageFirstItem()));
                     }
-                    return new ListDataModel(getJpaController().findClienteFilter(filtered, getPageSize(), getPageFirstItem()));
+                    return new ListDataModel(getJpaController().findRdcEfetivoFilter(filtered, getPageSize(), getPageFirstItem()));
                 }
             };
         }
@@ -117,12 +117,12 @@ public class ClienteController implements Serializable {
     }
 
     public void prepareView() {
-        current = (Cliente) getItems().getRowData();
+        current = (RdcEfetivo) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
     }
 
     public void prepareCreate() {
-        current = new Cliente();
+        current = new RdcEfetivo();
         selectedItemIndex = -1;
     }
 
@@ -130,7 +130,7 @@ public class ClienteController implements Serializable {
         try {
             getJpaController().create(current);
             FacesContext context = FacesContext.getCurrentInstance();
-            JsfUtil.addSuccessMessage(FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("ClienteCreated"));
+            JsfUtil.addSuccessMessage(FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("RdcEfetivoCreated"));
             clearFilter();
             recreateModel();
         } catch (Exception e) {
@@ -145,7 +145,7 @@ public class ClienteController implements Serializable {
     }
 
     public void prepareEdit() {
-        current = (Cliente) getItems().getRowData();
+        current = (RdcEfetivo) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
     }
 
@@ -153,7 +153,7 @@ public class ClienteController implements Serializable {
         try {
             getJpaController().edit(current);
             FacesContext context = FacesContext.getCurrentInstance();
-            JsfUtil.addSuccessMessage(FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("ClienteUpdated"));
+            JsfUtil.addSuccessMessage(FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("RdcEfetivoUpdated"));
         } catch (Exception e) {
             FacesContext context = FacesContext.getCurrentInstance();
             JsfUtil.addErrorMessage(e, FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("PersistenceErrorOccured"));
@@ -173,7 +173,7 @@ public class ClienteController implements Serializable {
     }
 
     public void prepareDestroy() {
-        current = (Cliente) getItems().getRowData();
+        current = (RdcEfetivo) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
     }
 
@@ -200,7 +200,7 @@ public class ClienteController implements Serializable {
         try {
             getJpaController().destroy(current.getId());
             FacesContext context = FacesContext.getCurrentInstance();
-            JsfUtil.addSuccessMessage(FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("ClienteDeleted"));
+            JsfUtil.addSuccessMessage(FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("RdcEfetivoDeleted"));
         } catch (Exception e) {
             FacesContext context = FacesContext.getCurrentInstance();
             JsfUtil.addErrorMessage(e, FacesContext.getCurrentInstance().getApplication().getResourceBundle(context, "bundle").getString("PersistenceErrorOccured"));
@@ -208,7 +208,7 @@ public class ClienteController implements Serializable {
     }
 
     private void updateCurrentItem() {
-        int count = getJpaController().getClienteCount(filtered);
+        int count = getJpaController().getRdcEfetivoCount(filtered);
         if (selectedItemIndex >= count) {
             // selected index cannot be bigger than number of items:
             selectedItemIndex = count - 1;
@@ -218,7 +218,7 @@ public class ClienteController implements Serializable {
             }
         }
         if (selectedItemIndex >= 0) {
-            current = getJpaController().findClienteEntities(1, selectedItemIndex).get(0);
+            current = getJpaController().findRdcEfetivoEntities(1, selectedItemIndex).get(0);
         }
     }
 
@@ -274,24 +274,24 @@ public class ClienteController implements Serializable {
     }
 
     public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(getJpaController().findClienteEntities(), false);
+        return JsfUtil.getSelectItems(getJpaController().findRdcEfetivoEntities(), false);
     }
 
     public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(getJpaController().findClienteEntities(), true);
+        return JsfUtil.getSelectItems(getJpaController().findRdcEfetivoEntities(), true);
     }
 
-    @FacesConverter(forClass = Cliente.class)
-    public static class ClienteControllerConverter implements Converter {
+    @FacesConverter(forClass = RdcEfetivo.class)
+    public static class RdcEfetivoControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            ClienteController controller = (ClienteController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "clienteController");
-            return controller.getJpaController().findCliente(getKey(value));
+            RdcEfetivoController controller = (RdcEfetivoController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "rdcEfetivoController");
+            return controller.getJpaController().findRdcEfetivo(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -311,11 +311,11 @@ public class ClienteController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Cliente) {
-                Cliente o = (Cliente) object;
+            if (object instanceof RdcEfetivo) {
+                RdcEfetivo o = (RdcEfetivo) object;
                 return getStringKey(o.getId());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Cliente.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + RdcEfetivo.class.getName());
             }
         }
 
