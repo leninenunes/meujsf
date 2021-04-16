@@ -8,8 +8,6 @@
     <class>model.Funcao</class>
     <class>model.Cliente</class>
     <class>model.RdcEfetivo</class>
-    <class>beans.Funcao</class>
-    <class>beans.Efetivo</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/meujsf?useTimezone=true&amp;serverTimezone=UTC"/>
